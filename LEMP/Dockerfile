@@ -1,9 +1,38 @@
 FROM php:7-fpm-alpine
-MAINTAINER Kiattipat Sukonthapong <kiattipat.su@gmail.com>
-RUN apk upgrade --update && apk --no-cache add \
-    git autoconf file g++ gcc binutils isl libatomic libc-dev musl-dev make re2c libstdc++ libgcc libcurl binutils-libs mpc1 mpfr3 gmp libgomp coreutils freetype-dev libjpeg-turbo-dev libltdl libmcrypt-dev libpng-dev openssl-dev libxml2-dev expat-dev icu-dev libmemcached-dev \
-    && docker-php-ext-install iconv mysqli pdo pdo_mysql curl bcmath mcrypt mbstring json xml zip bz2 opcache intl  \
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install gd
+MAINTAINER Sathit Seethaphon <dixonsatit@gmail.com>
+
+RUN apk add -U --no-cache \
+    bash \
+    git \
+    curl-dev \
+    libxml2-dev \
+    postgresql-dev \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    zip \
+    libzip-dev \
+    unzip \
+    gmp-dev
+
+RUN docker-php-source extract
+RUN cp /usr/src/php/ext/openssl/config0.m4 /usr/src/php/ext/openssl/config.m4
+RUN docker-php-ext-configure gd --with-png-dir=/usr/include --with-jpeg-dir=/usr/include
+RUN docker-php-ext-install pdo\
+    pdo_mysql \
+    mysqli \
+    pdo_pgsql \
+    pgsql \
+    mbstring \
+    curl \
+    ctype \
+    xml \
+    json \
+    tokenizer \
+    openssl \
+    gd \
+    zip \
+    gmp \
+    bcmath
+
 EXPOSE 9000
 CMD ["php-fpm"]
