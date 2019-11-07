@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 networks:
     LEMP:
@@ -17,7 +17,7 @@ services:
         networks:
             - LEMP
 
-    mariaDB:
+    mariadb:
         image: mariadb:latest
         container_name: LEMP_mariaDB
         volumes:
@@ -27,7 +27,10 @@ services:
         depends_on:
             - nginx
         environment:
-            - MYSQL_ROOT_PASSWORD=654321          
+            - MYSQL_ROOT_PASSWORD=654321
+            - MYSQL_DATABASE=courtservices
+            - MYSQL_USER=courtservices
+            - MYSQL_PASSWORD=courtservices          
         networks:
             - LEMP    
 
@@ -49,9 +52,11 @@ services:
         environment:        
             PMA_ARBITRARY: 1
         depends_on:
-            - mariaDB
+            - mariadb
         networks:
             - LEMP
+        links:
+            - mariadb
     
 
 
